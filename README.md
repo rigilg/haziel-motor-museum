@@ -49,3 +49,6 @@ No database migration or deployment is performed by the public exhibit build.
 
 See [exhibit implementation notes](docs/ferrari-exhibit.md) and
 [photo credits](public/images/ferrari-250-gto/CREDITS.md).
+
+See [database migration validation](docs/database.md) for the additive hardening
+migration, access model, disposable database checks, and staging procedure.
