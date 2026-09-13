@@ -1,0 +1,48 @@
+name: Database checks
+on:
+  push:
+    branches: [develop]
+  pull_request:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  migrations:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        scenario: [fresh, upgrade]
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_PASSWORD: test-only
+          POSTGRES_DB: museum_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      PGHOST: localhost
+      PGUSER: postgres
+      PGPASSWORD: test-only
+      PGDATABASE: museum_test
+    steps:
+      - uses: actions/checkout@v4
+      - name: Bootstrap disposable roles and initial schema
+        run: |
+          psql -X -v ON_ERROR_STOP=1 -f supabase/tests/bootstrap.sql
+          psql -X -v ON_ERROR_STOP=1 -f supabase/migrations/001_initial_schema.sql
+      - name: Seed pre-existing content
+        if: matrix.scenario == 'upgrade'
+        run: psql -X -v ON_ERROR_STOP=1 -f supabase/tests/upgrade_fixture.sql
+      - name: Apply hardening and test database behavior
+        run: |
+          psql -X -v ON_ERROR_STOP=1 -f supabase/migrations/002_harden_schema.sql
+          psql -X -v ON_ERROR_STOP=1 -f supabase/tests/hardening.sql
+      - name: Verify existing content survived
+        if: matrix.scenario == 'upgrade'
+        run: psql -X -v ON_ERROR_STOP=1 -f supabase/tests/upgrade_assertions.sql
