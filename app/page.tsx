@@ -33,6 +33,7 @@ export default function Home() {
         <nav className="hidden gap-8 text-sm md:flex">
           <Link href="/collection">Collection</Link>
           <Link href="/timeline">Timeline</Link>
+          <Link href="/tours">Tours</Link>
           <a href="#about">About</a>
         </nav>
       </header>
@@ -186,6 +187,14 @@ export default function Home() {
         </div>
       </section>
 
+      <section className="border-y border-[var(--line)] bg-[#ebe7dc]">
+        <div className="mx-auto max-w-7xl px-6 py-16">
+          <p className="museum-sans text-xs font-bold uppercase tracking-[0.25em] text-[var(--muted)]">Take a guided route</p>
+          <h2 className="display mt-3 text-4xl">Form follows competition.</h2>
+          <p className="mt-4 max-w-2xl text-lg leading-relaxed text-[var(--muted)]">A short, self-guided visit through the ideas and engineering behind the Ferrari 250 GTO.</p>
+          <Link href="/tours" className="museum-sans mt-6 inline-block text-sm font-bold underline underline-offset-4">Explore curated tours ↗</Link>
+        </div>
+      </section>
       <section id="about" className="mx-auto max-w-7xl px-6 py-24">
         <div className="max-w-3xl">
           <p className="museum-sans text-xs font-bold uppercase tracking-[0.25em] text-[var(--muted)]">
