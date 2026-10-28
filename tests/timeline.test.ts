@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { timelineEvents } from "../lib/timeline.ts";
+import { timelineEvents, searchTimeline } from "../lib/timeline.ts";
 
 test("global timeline is chronological, has unique milestones and visible sourcing", () => {
   assert.ok(timelineEvents.length >= 5);
@@ -17,4 +17,12 @@ test("published Ferrari timeline entry points to the production exhibit", () => 
   assert.ok(event);
   assert.equal(event.year, 1962);
   assert.equal(event.source.url, "/vehicles/ferrari-250-gto#sources");
+});
+
+test("timeline search matches years, stories and eras, and combines filters", () => {
+  assert.equal(searchTimeline(" 1997 prius ").length, 1);
+  assert.equal(searchTimeline("factory", "Manufacturing").length, 1);
+  assert.deepEqual(searchTimeline("prius", "Origins"), []);
+  assert.deepEqual(searchTimeline("not-a-milestone"), []);
+  assert.deepEqual(searchTimeline("", "not-an-era"), []);
 });

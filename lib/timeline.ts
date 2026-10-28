@@ -16,3 +16,11 @@ export const timelineEvents: readonly TimelineEvent[] = [
   { year: 1962, era: "Competition", title: "The Ferrari 250 GTO enters the story", story: "Ferrari’s competition berlinetta makes its racing debut at Sebring, beginning a period in which aerodynamic form, endurance and speed become inseparable parts of its legend.", significance: "The GTO is a study in how competition requirements can shape a lasting design icon.", vehicle: { name: "Ferrari 250 GTO", slug: "ferrari-250-gto" }, source: { label: "Ferrari 250 GTO exhibit sources", url: "/vehicles/ferrari-250-gto#sources" } },
   { year: 1997, era: "Electrification", title: "A hybrid enters mass production", story: "Toyota launches the first-generation Prius in Japan, bringing a petrol-electric hybrid passenger car into mass production.", significance: "The Prius makes hybrid propulsion a mainstream production program and opens a new chapter in how efficiency is pursued.", vehicle: { name: "Toyota Prius" }, source: { label: "Toyota Media: Prius history", url: "https://media.toyota.co.uk/toyota-worldwide-hybrid-sales-top-500000-units/" } },
 ];
+
+export function searchTimeline(query: string, era = ""): TimelineEvent[] {
+  const terms = query.normalize("NFKD").replace(/\p{M}/gu, "").toLowerCase().trim().split(/\s+/).filter(Boolean);
+  return timelineEvents.filter((event) => {
+    const haystack = [event.year, event.era, event.title, event.story, event.significance, event.vehicle?.name].join(" ").normalize("NFKD").replace(/\p{M}/gu, "").toLowerCase();
+    return (!era || event.era === era) && terms.every((term) => haystack.includes(term));
+  });
+}
