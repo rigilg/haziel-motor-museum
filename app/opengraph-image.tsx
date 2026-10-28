@@ -14,7 +14,10 @@ export default function OpenGraphImage() {
         </div>
         <div style={{ display: "flex", flexDirection: "column", maxWidth: 960 }}>
           <div style={{ display: "flex", color: "#9b1c1c", fontFamily: "Arial", fontSize: 17, fontWeight: 700, letterSpacing: 6, textTransform: "uppercase" }}>A digital museum · 1886—Present</div>
-          <div style={{ display: "flex", marginTop: 24, fontFamily: "Georgia", fontSize: 78, lineHeight: 1.02, letterSpacing: -3 }}>The automobile,<br/>preserved as history.</div>
+          <div style={{ display: "flex", flexDirection: "column", marginTop: 24, fontFamily: "Georgia", fontSize: 72, lineHeight: 1.02, letterSpacing: -2 }}>
+            <div style={{ display: "flex" }}>The automobile,</div>
+            <div style={{ display: "flex" }}>preserved as history.</div>
+          </div>
         </div>
         <div style={{ display: "flex", justifyContent: "space-between", borderTop: "1px solid #d8d3c8", paddingTop: 20, fontFamily: "Arial", fontSize: 16, color: "#6c6a64" }}>
           <span>Design · Engineering · Competition · Culture</span><span>HAZIELMOTORMUSEUM.RIGILGILBERT.COM</span>
