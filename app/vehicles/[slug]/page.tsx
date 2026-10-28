@@ -87,6 +87,9 @@ export default async function VehiclePage({ params }: Props) {
               <a className="text-link" href="#story">
                 Enter the story <span aria-hidden="true">↓</span>
               </a>
+              <Link className="text-link" href="/tours">
+                Take the guided tour <span aria-hidden="true">↗</span>
+              </Link>
             </div>
           </div>
         </section>
