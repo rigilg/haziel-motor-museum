@@ -31,7 +31,7 @@ export default function Home() {
           HAZIEL MOTOR MUSEUM
         </Link>
         <nav className="hidden gap-8 text-sm md:flex">
-          <a href="#collection">Collection</a>
+          <Link href="/collection">Collection</Link>
           <a href="#timeline">Timeline</a>
           <a href="#about">About</a>
         </nav>
@@ -51,7 +51,7 @@ export default function Home() {
           </p>
           <div className="museum-sans mt-10 flex gap-4">
             <a
-              href="#collection"
+              href="/collection"
               className="bg-[var(--ink)] px-6 py-3 text-sm font-bold text-white"
             >
               Explore the collection
