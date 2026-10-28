@@ -205,6 +205,9 @@ export const ferrari250GTO: Vehicle = {
   ],
 };
 
+// Only editorially reviewed, published exhibits belong in this registry.
+export const publishedVehicles: readonly Vehicle[] = [ferrari250GTO];
+
 export function getVehicle(slug: string): Vehicle | undefined {
-  return slug === ferrari250GTO.slug ? ferrari250GTO : undefined;
+  return publishedVehicles.find((vehicle) => vehicle.slug === slug);
 }

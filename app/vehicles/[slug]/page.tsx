@@ -69,7 +69,7 @@ export default async function VehiclePage({ params }: Props) {
             HAZIEL<span>MOTOR MUSEUM</span>
           </span>
         </Link>
-        <Link href="/#collection">← The collection</Link>
+        <Link href="/collection">← The collection</Link>
       </header>
       <main id="exhibit-main">
         <section className="exhibit-intro wrap">
@@ -353,7 +353,7 @@ export default async function VehiclePage({ params }: Props) {
             <br />
             <em>Keep looking.</em>
           </h2>
-          <Link className="museum-button" href="/#collection">
+          <Link className="museum-button" href="/collection">
             Return to the collection <span aria-hidden="true">↗</span>
           </Link>
           <a href="#top" className="text-link">
