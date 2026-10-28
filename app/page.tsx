@@ -32,7 +32,7 @@ export default function Home() {
         </Link>
         <nav className="hidden gap-8 text-sm md:flex">
           <Link href="/collection">Collection</Link>
-          <a href="#timeline">Timeline</a>
+          <Link href="/timeline">Timeline</Link>
           <a href="#about">About</a>
         </nav>
       </header>
@@ -56,12 +56,12 @@ export default function Home() {
             >
               Explore the collection
             </a>
-            <a
-              href="#timeline"
+            <Link
+              href="/timeline"
               className="border border-[var(--ink)] px-6 py-3 text-sm font-bold"
             >
               View timeline
-            </a>
+            </Link>
           </div>
         </div>
         <Link
@@ -164,6 +164,8 @@ export default function Home() {
           <h2 className="display mt-2 max-w-3xl text-5xl">
             From horseless carriage to electric revolution.
           </h2>
+          <p className="mt-5 max-w-xl text-[var(--muted)]">Follow the ideas and turning points behind the machines, from early motor cars to hybrid propulsion.</p>
+          <Link href="/timeline" className="museum-sans mt-6 inline-block text-sm font-bold underline underline-offset-4">Explore the full timeline ↗</Link>
           <div className="mt-14 grid gap-0 md:grid-cols-4">
             {[
               ["1886", "Birth", "Benz Patent-Motorwagen"],
