@@ -39,19 +39,27 @@ and models older permissive grants; never run test bootstrap/fixtures on a hoste
 project. With standard PGHOST/PGPORT/PGUSER/PGPASSWORD/PGDATABASE variables set:
 
 ```sh
-psql -X -v ON_ERROR_STOP=1 -f supabase/tests/bootstrap.sql
-psql -X -v ON_ERROR_STOP=1 -f supabase/migrations/001_initial_schema.sql
-# For the upgrade scenario, insert this before 002:
-# psql -X -v ON_ERROR_STOP=1 -f supabase/tests/upgrade_fixture.sql
-psql -X -v ON_ERROR_STOP=1 -f supabase/migrations/002_harden_schema.sql
-psql -X -v ON_ERROR_STOP=1 -f supabase/tests/hardening.sql
-# After the upgrade scenario:
-# psql -X -v ON_ERROR_STOP=1 -f supabase/tests/upgrade_assertions.sql
+bash scripts/check-database.sh fresh
+# Use a separate new disposable cluster for each other scenario:
+bash scripts/check-database.sh upgrade
+bash scripts/check-database.sh rollback
 ```
 
-Roles are cluster-scoped: bootstrap once per disposable cluster; recreate the
-database for each scenario and restore schema usage/default grants in that database.
-CI runs fresh and populated-upgrade scenarios in separate PostgreSQL services.
+Roles are cluster-scoped: each scenario starts with a new disposable cluster.
+The script bootstraps roles, applies the initial schema and runs all behavior
+assertions. Upgrade also seeds and checks pre-existing content. Rollback seeds
+an invalid slug, requires the specific constraint failure, checks that ACLs,
+RLS, triggers, function and constraints were rolled back, then corrects the
+fixture and retries the migration. Both populated scenarios verify content
+preservation after hardening. Never use this script against a hosted project.
+
+CI runs all three scenarios independently with PostgreSQL 17 services and a
+10-minute job limit. A failed scenario does not cancel its siblings. Checks run
+on pushes to `develop` and `main`, on PRs to `main`, and manually from Actions →
+Database checks → Run workflow (choose the branch to verify). Once merged into
+the default branch, the manual trigger also permits new checks when old runs
+have aged out of GitHub's rerun window.
+
 Assertions raise errors, so `ON_ERROR_STOP` makes failures fail the job. Behavior
 tests roll back their fixture changes. They exercise ACL denial for every table,
 RLS defense against accidental grants, trusted CRUD, timestamp maintenance,

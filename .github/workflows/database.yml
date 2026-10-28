@@ -1,7 +1,8 @@
 name: Database checks
 on:
+  workflow_dispatch:
   push:
-    branches: [develop]
+    branches: [develop, main]
   pull_request:
     branches: [main]
 permissions:
@@ -9,9 +10,11 @@ permissions:
 jobs:
   migrations:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     strategy:
+      fail-fast: false
       matrix:
-        scenario: [fresh, upgrade]
+        scenario: [fresh, upgrade, rollback]
     services:
       postgres:
         image: postgres:17
@@ -32,17 +35,5 @@ jobs:
       PGDATABASE: museum_test
     steps:
       - uses: actions/checkout@v4
-      - name: Bootstrap disposable roles and initial schema
-        run: |
-          psql -X -v ON_ERROR_STOP=1 -f supabase/tests/bootstrap.sql
-          psql -X -v ON_ERROR_STOP=1 -f supabase/migrations/001_initial_schema.sql
-      - name: Seed pre-existing content
-        if: matrix.scenario == 'upgrade'
-        run: psql -X -v ON_ERROR_STOP=1 -f supabase/tests/upgrade_fixture.sql
-      - name: Apply hardening and test database behavior
-        run: |
-          psql -X -v ON_ERROR_STOP=1 -f supabase/migrations/002_harden_schema.sql
-          psql -X -v ON_ERROR_STOP=1 -f supabase/tests/hardening.sql
-      - name: Verify existing content survived
-        if: matrix.scenario == 'upgrade'
-        run: psql -X -v ON_ERROR_STOP=1 -f supabase/tests/upgrade_assertions.sql
+      - name: Validate migration scenario
+        run: bash scripts/check-database.sh "${{ matrix.scenario }}"
