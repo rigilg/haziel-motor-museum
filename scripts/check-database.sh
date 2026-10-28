@@ -30,4 +30,6 @@ fi
 if [[ "$scenario" != fresh ]]; then
   "${psql_cmd[@]}" -f supabase/tests/upgrade_assertions.sql
 fi
+"${psql_cmd[@]}" -f supabase/migrations/003_public_published_read.sql
+"${psql_cmd[@]}" -f supabase/tests/public_read.sql
 echo "Database scenario passed: $scenario"

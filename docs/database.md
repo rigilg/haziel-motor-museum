@@ -11,13 +11,13 @@ files are ordered migrations, not scripts to repeatedly replay over an existing
 schema. 002 is transactional: a constraint failure rolls back the entire change.
 It changes no editorial rows and drops no tables.
 
-All 14 museum tables have RLS enabled and explicit revocation of privileges from
-PUBLIC, `anon`, and `authenticated`. There are no public policies yet, including
-for rows marked published. Signing in does not confer curator privileges.
-`service_role` receives SELECT/INSERT/UPDATE/DELETE and uses Supabase's existing
-BYPASSRLS role; credentials must stay server-side. A future CMS/public read slice
-must define publication rules across the whole content/provenance graph before
-adding grants and policies. Storage bucket policies are outside this schema.
+All 14 museum tables have RLS enabled. Migration 002 revokes privileges from
+PUBLIC, `anon`, and `authenticated`, then grants CRUD to `service_role`, which
+uses Supabase's existing BYPASSRLS role. Migration 003 selectively grants anon
+read access to published exhibit records and provenance-verified media. Drafts,
+collections, and signed-in users without a separate CMS flow remain private.
+Service-role credentials must stay server-side. Storage bucket policies are
+outside this schema.
 
 002 maintains the four existing `updated_at` columns, validates slugs/nonblank
 names, chronological ranges, finite nonnegative specifications (positive weight
@@ -82,3 +82,8 @@ No hosted migration has been applied. The public Next.js build needs no DB secre
 References: [Supabase RLS](https://supabase.com/docs/guides/database/postgres/row-level-security),
 [API grants](https://supabase.com/docs/guides/api/securing-your-api),
 [PostgreSQL constraints](https://www.postgresql.org/docs/17/ddl-constraints.html).
+
+
+## Public published records
+
+Migration `003_public_published_read.sql` grants the anonymous API role SELECT only on exhibit data that belongs to published vehicles. Stories must also be published, and media must be rights-verified. Collection configuration remains private. Anonymous access is read-only; authenticated users receive no implicit editorial privileges. Service-role CRUD remains the trusted server-side path for a future CMS. The database CI runner checks these rules in fresh, upgrade and rollback clusters.
